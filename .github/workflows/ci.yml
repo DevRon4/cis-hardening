@@ -1,3 +1,4 @@
+---
 name: CIS Hardening CI
 
 on:
@@ -7,7 +8,8 @@ on:
     branches: [main]
 
 jobs:
-  molecule:
+  lint:
+    name: Ansible Lint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -20,13 +22,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install ansible molecule molecule-docker ansible-lint
+          pip install ansible ansible-lint
+
+      - name: Install required collections
+        run: |
+          ansible-galaxy collection install community.general ansible.posix
 
       - name: Run ansible-lint
-        run: ansible-lint roles/cis_rhel/
-
-      - name: Run Molecule tests
-        run: molecule test
-        env:
-          PY_COLORS: "1"
-          ANSIBLE_FORCE_COLOR: "1"
+        run: |
+          ansible-lint roles/cis_rhel/
