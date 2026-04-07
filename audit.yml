@@ -1,0 +1,6 @@
+---
+- name: CIS Audit only - no changes
+  hosts: rhel
+  become: true
+  roles:
+    - role: cis_audit

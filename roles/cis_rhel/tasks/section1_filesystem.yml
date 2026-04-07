@@ -1,0 +1,105 @@
+---
+- name: "1.1.1 | Disable cramfs filesystem"
+  modprobe:
+    name: cramfs
+    state: absent
+  when: cis_1_1_1_cramfs
+  tags: [level1, scored, rule_1_1_1]
+
+- name: "1.1.1 | Blacklist cramfs in modprobe"
+  lineinfile:
+    dest: /etc/modprobe.d/CIS.conf
+    line: "install cramfs /bin/true"
+    create: yes
+  when: cis_1_1_1_cramfs
+  tags: [level1, scored, rule_1_1_1]
+
+- name: "1.1.2 | Disable freevxfs filesystem"
+  modprobe:
+    name: freevxfs
+    state: absent
+  when: cis_1_1_2_freevxfs
+  tags: [level1, scored, rule_1_1_2]
+
+- name: "1.1.2 | Blacklist freevxfs"
+  lineinfile:
+    dest: /etc/modprobe.d/CIS.conf
+    line: "install freevxfs /bin/true"
+    create: yes
+  when: cis_1_1_2_freevxfs
+  tags: [level1, scored, rule_1_1_2]
+
+- name: "1.1.3 | Disable jffs2 filesystem"
+  modprobe:
+    name: jffs2
+    state: absent
+  when: cis_1_1_3_jffs2
+  tags: [level1, scored, rule_1_1_3]
+
+- name: "1.1.3 | Blacklist jffs2"
+  lineinfile:
+    dest: /etc/modprobe.d/CIS.conf
+    line: "install jffs2 /bin/true"
+    create: yes
+  when: cis_1_1_3_jffs2
+  tags: [level1, scored, rule_1_1_3]
+
+- name: "1.1.4 | Disable hfs filesystem"
+  modprobe:
+    name: hfs
+    state: absent
+  when: cis_1_1_4_hfs
+  tags: [level1, scored, rule_1_1_4]
+
+- name: "1.1.4 | Blacklist hfs"
+  lineinfile:
+    dest: /etc/modprobe.d/CIS.conf
+    line: "install hfs /bin/true"
+    create: yes
+  when: cis_1_1_4_hfs
+  tags: [level1, scored, rule_1_1_4]
+
+- name: "1.1.5 | Disable hfsplus filesystem"
+  modprobe:
+    name: hfsplus
+    state: absent
+  when: cis_1_1_5_hfsplus
+  tags: [level1, scored, rule_1_1_5]
+
+- name: "1.1.5 | Blacklist hfsplus"
+  lineinfile:
+    dest: /etc/modprobe.d/CIS.conf
+    line: "install hfsplus /bin/true"
+    create: yes
+  when: cis_1_1_5_hfsplus
+  tags: [level1, scored, rule_1_1_5]
+
+- name: "1.1.6 | Disable udf filesystem"
+  modprobe:
+    name: udf
+    state: absent
+  when: cis_1_1_6_udf
+  tags: [level1, scored, rule_1_1_6]
+
+- name: "1.1.6 | Blacklist udf"
+  lineinfile:
+    dest: /etc/modprobe.d/CIS.conf
+    line: "install udf /bin/true"
+    create: yes
+  when: cis_1_1_6_udf
+  tags: [level1, scored, rule_1_1_6]
+
+- name: "1.3.1 | Ensure AIDE is installed"
+  apt:
+    name: aide
+    state: present
+    update_cache: yes
+  when: cis_1_3_1_aide
+  tags: [level1, scored, rule_1_3_1]
+
+- name: "1.3.1 | Initialize AIDE database"
+  command: aideinit
+  args:
+    creates: /var/lib/aide/aide.db
+  when: cis_1_3_1_aide
+  tags: [level1, scored, rule_1_3_1]

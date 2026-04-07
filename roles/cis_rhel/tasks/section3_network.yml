@@ -1,0 +1,49 @@
+---
+- name: "3.1.1 | Disable IP forwarding"
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: "0"
+    state: present
+    reload: yes
+    sysctl_file: /etc/sysctl.d/99-cis.conf
+  when: cis_3_1_1_ip_forwarding
+  tags: [level1, scored, rule_3_1_1]
+
+- name: "3.2.1 | Disable source-routed packets"
+  sysctl:
+    name: "{{ item }}"
+    value: "0"
+    state: present
+    reload: yes
+    sysctl_file: /etc/sysctl.d/99-cis.conf
+  loop:
+    - net.ipv4.conf.all.accept_source_route
+    - net.ipv4.conf.default.accept_source_route
+  when: cis_3_2_1_source_routed
+  tags: [level1, scored, rule_3_2_1]
+
+- name: "3.2.2 | Disable ICMP redirects"
+  sysctl:
+    name: "{{ item }}"
+    value: "0"
+    state: present
+    reload: yes
+    sysctl_file: /etc/sysctl.d/99-cis.conf
+  loop:
+    - net.ipv4.conf.all.accept_redirects
+    - net.ipv4.conf.default.accept_redirects
+  when: cis_3_2_2_icmp_redirects
+  tags: [level1, scored, rule_3_2_2]
+
+- name: "3.3.1 | Disable IPv6 router advertisements"
+  sysctl:
+    name: "{{ item }}"
+    value: "0"
+    state: present
+    reload: yes
+    sysctl_file: /etc/sysctl.d/99-cis.conf
+  loop:
+    - net.ipv6.conf.all.accept_ra
+    - net.ipv6.conf.default.accept_ra
+  when: cis_3_3_1_ipv6_router_ads
+  tags: [level2, scored, rule_3_3_1]

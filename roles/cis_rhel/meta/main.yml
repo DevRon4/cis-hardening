@@ -1,0 +1,19 @@
+---
+galaxy_info:
+  role_name: cis_rhel
+  author: yourname
+  description: CIS Benchmark hardening for Ubuntu on AWS Lightsail
+  license: MIT
+  min_ansible_version: "2.12"
+  platforms:
+    - name: Ubuntu
+      versions:
+        - focal
+        - jammy
+  galaxy_tags:
+    - security
+    - cis
+    - hardening
+    - ubuntu
+    - compliance
+dependencies: []

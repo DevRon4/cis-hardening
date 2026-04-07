@@ -1,0 +1,13 @@
+reports/
+
+*.pem
+
+*.retry
+
+*.log
+
+.ansible/
+
+__pycache__/
+
+*.pyc

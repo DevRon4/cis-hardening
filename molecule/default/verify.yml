@@ -1,0 +1,32 @@
+---
+- name: Verify CIS controls applied
+  hosts: all
+  become: true
+  tasks:
+    - name: cramfs should not be loaded
+      shell: lsmod | grep cramfs
+      register: cramfs_check
+      failed_when: cramfs_check.rc == 0
+      changed_when: false
+
+    - name: IP forwarding should be disabled
+      shell: sysctl net.ipv4.ip_forward
+      register: ipfwd
+      failed_when: "'= 1' in ipfwd.stdout"
+      changed_when: false
+
+    - name: SSH PermitRootLogin should be no
+      shell: grep "^PermitRootLogin no" /etc/ssh/sshd_config
+      changed_when: false
+
+    - name: auditd should be running
+      shell: systemctl is-active auditd
+      register: auditd_status
+      failed_when: auditd_status.stdout != 'active'
+      changed_when: false
+
+    - name: rsyslog should be running
+      shell: systemctl is-active rsyslog
+      register: rsyslog_status
+      failed_when: rsyslog_status.stdout != 'active'
+      changed_when: false

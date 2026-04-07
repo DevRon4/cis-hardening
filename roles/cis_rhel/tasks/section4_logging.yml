@@ -1,0 +1,32 @@
+---
+- name: "4.1.1 | Ensure auditd is installed"
+  apt:
+    name: auditd
+    state: present
+    update_cache: yes
+  when: cis_4_1_1_auditd
+  tags: [level2, scored, rule_4_1_1]
+
+- name: "4.1.1 | Ensure auditd is enabled and running"
+  service:
+    name: auditd
+    state: started
+    enabled: yes
+  when: cis_4_1_1_auditd
+  tags: [level2, scored, rule_4_1_1]
+
+- name: "4.2.1 | Ensure rsyslog is installed"
+  apt:
+    name: rsyslog
+    state: present
+    update_cache: yes
+  when: cis_4_2_1_rsyslog
+  tags: [level1, scored, rule_4_2_1]
+
+- name: "4.2.1 | Ensure rsyslog is enabled and running"
+  service:
+    name: rsyslog
+    state: started
+    enabled: yes
+  when: cis_4_2_1_rsyslog
+  tags: [level1, scored, rule_4_2_1]

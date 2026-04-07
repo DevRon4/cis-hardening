@@ -1,0 +1,7 @@
+---
+- name: CIS Benchmark Hardening - Ubuntu
+  hosts: rhel
+  become: true
+  roles:
+    - cis_rhel
+    - cis_audit

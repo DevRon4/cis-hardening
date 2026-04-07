@@ -1,0 +1,18 @@
+---
+- import_tasks: section1_filesystem.yml
+  tags: [section1, filesystem]
+
+- import_tasks: section2_services.yml
+  tags: [section2, services]
+
+- import_tasks: section3_network.yml
+  tags: [section3, network]
+
+- import_tasks: section4_logging.yml
+  tags: [section4, logging]
+
+- import_tasks: section5_access.yml
+  tags: [section5, access]
+
+- import_tasks: section6_sysctl.yml
+  tags: [section6, sysctl]

@@ -1,0 +1,14 @@
+{
+  "host": "{{ inventory_hostname }}",
+  "date": "{{ ansible_date_time.date }}",
+  "score": {
+    "passed": {{ audit_pass_count }},
+    "total":  {{ audit_total_count }},
+    "percent": {{ ((audit_pass_count | int / audit_total_count | int) * 100) | round(1) }}
+  },
+  "results": [
+    {% for item in audit_results %}
+    {"id": "{{ item.id }}", "desc": "{{ item.desc }}", "pass": {{ item.pass | lower }}}{{ "," if not loop.last }}
+    {% endfor %}
+  ]
+}

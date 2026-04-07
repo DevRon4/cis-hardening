@@ -1,0 +1,33 @@
+---
+cis_level: 1
+
+cis_1_1_1_cramfs: true
+cis_1_1_2_freevxfs: true
+cis_1_1_3_jffs2: true
+cis_1_1_4_hfs: true
+cis_1_1_5_hfsplus: true
+cis_1_1_6_udf: true
+cis_1_3_1_aide: true
+
+cis_2_1_1_disable_xinetd: true
+cis_2_2_1_ntpd: true
+cis_2_3_1_mta_localhost: true
+
+cis_3_1_1_ip_forwarding: true
+cis_3_2_1_source_routed: true
+cis_3_2_2_icmp_redirects: true
+cis_3_3_1_ipv6_router_ads: true
+
+cis_4_1_1_auditd: true
+cis_4_2_1_rsyslog: true
+
+cis_5_1_1_cron_daemon: true
+cis_5_2_1_sshd_permissions: true
+cis_5_2_4_ssh_x11: true
+cis_5_2_5_ssh_maxauthtries: true
+cis_5_2_14_ssh_rootlogin: true
+cis_5_4_1_password_params: true
+
+cis_6_1_1_permissions_passwd: true
+
+cis_ssh_maxauthtries: 4

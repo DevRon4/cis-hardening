@@ -1,0 +1,33 @@
+---
+- name: "2.1.1 | Ensure xinetd is not installed"
+  apt:
+    name: xinetd
+    state: absent
+  when: cis_2_1_1_disable_xinetd
+  tags: [level1, scored, rule_2_1_1]
+
+- name: "2.2.1 | Ensure chrony is installed"
+  apt:
+    name: chrony
+    state: present
+    update_cache: yes
+  when: cis_2_2_1_ntpd
+  tags: [level1, scored, rule_2_2_1]
+
+- name: "2.2.1 | Ensure chrony is enabled and running"
+  service:
+    name: chrony
+    state: started
+    enabled: yes
+  when: cis_2_2_1_ntpd
+  tags: [level1, scored, rule_2_2_1]
+
+- name: "2.3.1 | Ensure MTA is local-only"
+  lineinfile:
+    dest: /etc/postfix/main.cf
+    regexp: "^(#)?inet_interfaces"
+    line: "inet_interfaces = loopback-only"
+    state: present
+  when: cis_2_3_1_mta_localhost
+  notify: restart postfix
+  tags: [level1, scored, rule_2_3_1]

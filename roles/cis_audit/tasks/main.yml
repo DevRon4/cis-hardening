@@ -1,0 +1,99 @@
+---
+- name: Initialize audit results
+  set_fact:
+    audit_results: []
+
+- name: "AUDIT | 1.1.1 - cramfs disabled"
+  shell: lsmod | grep cramfs
+  register: r_cramfs
+  changed_when: false
+  failed_when: false
+
+- name: Record cramfs result
+  set_fact:
+    audit_results: "{{ audit_results + [{'id':'1.1.1','desc':'cramfs disabled','pass': r_cramfs.rc != 0}] }}"
+
+- name: "AUDIT | 3.1.1 - IP forwarding disabled"
+  shell: sysctl net.ipv4.ip_forward | grep -q '= 0'
+  register: r_ipfwd
+  changed_when: false
+  failed_when: false
+
+- name: Record IP forwarding result
+  set_fact:
+    audit_results: "{{ audit_results + [{'id':'3.1.1','desc':'IP forwarding disabled','pass': r_ipfwd.rc == 0}] }}"
+
+- name: "AUDIT | 5.2.14 - SSH PermitRootLogin no"
+  shell: grep -E "^PermitRootLogin no" /etc/ssh/sshd_config
+  register: r_rootlogin
+  changed_when: false
+  failed_when: false
+
+- name: Record SSH root login result
+  set_fact:
+    audit_results: "{{ audit_results + [{'id':'5.2.14','desc':'SSH PermitRootLogin no','pass': r_rootlogin.rc == 0}] }}"
+
+- name: "AUDIT | 5.2.4 - SSH X11 forwarding disabled"
+  shell: grep -E "^X11Forwarding no" /etc/ssh/sshd_config
+  register: r_x11
+  changed_when: false
+  failed_when: false
+
+- name: Record SSH X11 result
+  set_fact:
+    audit_results: "{{ audit_results + [{'id':'5.2.4','desc':'SSH X11Forwarding disabled','pass': r_x11.rc == 0}] }}"
+
+- name: "AUDIT | 4.1.1 - auditd running"
+  shell: systemctl is-active auditd
+  register: r_auditd
+  changed_when: false
+  failed_when: false
+
+- name: Record auditd result
+  set_fact:
+    audit_results: "{{ audit_results + [{'id':'4.1.1','desc':'auditd running','pass': r_auditd.stdout == 'active'}] }}"
+
+- name: "AUDIT | 6.1.1 - /etc/passwd is 644"
+  shell: stat -c %a /etc/passwd | grep -q 644
+  register: r_passwd
+  changed_when: false
+  failed_when: false
+
+- name: Record passwd permissions result
+  set_fact:
+    audit_results: "{{ audit_results + [{'id':'6.1.1','desc':'/etc/passwd is 644','pass': r_passwd.rc == 0}] }}"
+
+- name: "AUDIT | 4.2.1 - rsyslog running"
+  shell: systemctl is-active rsyslog
+  register: r_rsyslog
+  changed_when: false
+  failed_when: false
+
+- name: Record rsyslog result
+  set_fact:
+    audit_results: "{{ audit_results + [{'id':'4.2.1','desc':'rsyslog running','pass': r_rsyslog.stdout == 'active'}] }}"
+
+- name: Compute score
+  set_fact:
+    audit_pass_count: "{{ audit_results | selectattr('pass') | list | length }}"
+    audit_total_count: "{{ audit_results | length }}"
+
+- name: Generate HTML report
+  template:
+    src: report.html.j2
+    dest: /tmp/cis_report.html
+
+- name: Generate JSON report
+  template:
+    src: report.json.j2
+    dest: /tmp/cis_report.json
+
+- name: Fetch HTML report locally
+  fetch:
+    src: /tmp/cis_report.html
+    dest: ./reports/{{ inventory_hostname }}_cis_report.html
+    flat: yes
+
+- name: Print score summary
+  debug:
+    msg: "CIS Score: {{ audit_pass_count }}/{{ audit_total_count }} ({{ ((audit_pass_count | int / audit_total_count | int) * 100) | round(1) }}%)"

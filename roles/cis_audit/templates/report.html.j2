@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>CIS Report - {{ inventory_hostname }}</title>
+  <style>
+    body { font-family: monospace; background: #0d1117; color: #c9d1d9; padding: 2rem; }
+    h1   { color: #58a6ff; border-bottom: 1px solid #30363d; padding-bottom: .5rem; }
+    .score {
+      font-size: 2.5rem; font-weight: bold; margin: 1rem 0;
+      color: {% set pct = (audit_pass_count | int / audit_total_count | int * 100) | round %}{% if pct >= 80 %}#3fb950{% elif pct >= 60 %}#d29922{% else %}#f85149{% endif %};
+    }
+    table  { width: 100%; border-collapse: collapse; margin-top: 1.5rem; }
+    th     { background: #161b22; color: #8b949e; text-align: left; padding: 10px 14px; font-size: 13px; }
+    td     { padding: 10px 14px; border-bottom: 1px solid #21262d; font-size: 13px; }
+    .pass  { color: #3fb950; font-weight: bold; }
+    .fail  { color: #f85149; font-weight: bold; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; }
+  </style>
+</head>
+<body>
+  <h1>CIS Benchmark Compliance Report</h1>
+  <p>Host: <strong>{{ inventory_hostname }}</strong> &nbsp;|&nbsp; Date: {{ ansible_date_time.date }}</p>
+  <div class="score">
+    {{ audit_pass_count }}/{{ audit_total_count }}
+    ({{ ((audit_pass_count | int / audit_total_count | int) * 100) | round(1) }}%)
+  </div>
+  <table>
+    <tr>
+      <th>Rule ID</th>
+      <th>Description</th>
+      <th>Status</th>
+    </tr>
+    {% for item in audit_results %}
+    <tr>
+      <td>{{ item.id }}</td>
+      <td>{{ item.desc }}</td>
+      <td class="{{ 'pass' if item.pass else 'fail' }}">
+        {{ 'PASS' if item.pass else 'FAIL' }}
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</body>
+</html>

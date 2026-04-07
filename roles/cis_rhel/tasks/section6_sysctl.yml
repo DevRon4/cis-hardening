@@ -1,0 +1,33 @@
+---
+- name: "6.1.1 | Ensure /etc/passwd is 644"
+  ansible.builtin.file:
+    path: /etc/passwd
+    owner: root
+    group: root
+    mode: "0644"
+  when: cis_rhel_6_1_1_permissions_passwd
+  tags: [level1, scored, rule_6_1_1]
+
+- name: "6.1.2 | Ensure /etc/shadow is 640"
+  ansible.builtin.file:
+    path: /etc/shadow
+    owner: root
+    group: shadow
+    mode: "0640"
+  tags: [level1, scored, rule_6_1_2]
+
+- name: "6.1.3 | Ensure /etc/group is 644"
+  ansible.builtin.file:
+    path: /etc/group
+    owner: root
+    group: root
+    mode: "0644"
+  tags: [level1, scored, rule_6_1_3]
+
+- name: "6.1.4 | Ensure /etc/gshadow is 640"
+  ansible.builtin.file:
+    path: /etc/gshadow
+    owner: root
+    group: shadow
+    mode: "0640"
+  tags: [level1, scored, rule_6_1_4]
