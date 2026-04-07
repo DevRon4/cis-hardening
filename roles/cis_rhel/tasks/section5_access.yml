@@ -1,43 +1,46 @@
 ---
 - name: "5.1.1 | Ensure cron is enabled"
-  service:
+  ansible.builtin.service:
     name: cron
     state: started
-    enabled: yes
-  when: cis_5_1_1_cron_daemon
+    enabled: true
+  when: cis_rhel_5_1_1_cron_daemon
   tags: [level1, scored, rule_5_1_1]
 
 - name: "5.2.1 | Ensure sshd_config is 600"
-  file:
+  ansible.builtin.file:
     path: /etc/ssh/sshd_config
     owner: root
     group: root
     mode: "0600"
-  when: cis_5_2_1_sshd_permissions
+  when: cis_rhel_5_2_1_sshd_permissions
   tags: [level1, scored, rule_5_2_1]
 
 - name: "5.2 | Deploy hardened sshd_config"
-  template:
+  ansible.builtin.template:
     src: sshd_config.j2
     dest: /etc/ssh/sshd_config
     owner: root
     group: root
     mode: "0600"
     validate: /usr/sbin/sshd -t -f %s
-  notify: restart sshd
+  notify: Restart sshd
   tags: [level1, scored, rule_5_2]
 
 - name: "5.4.1 | Set password quality requirements"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/security/pwquality.conf
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
-    create: yes
+    create: true
+    owner: root
+    group: root
+    mode: "0644"
   loop:
-    - { regexp: '^minlen',  line: 'minlen = 14' }
-    - { regexp: '^dcredit', line: 'dcredit = -1' }
-    - { regexp: '^ucredit', line: 'ucredit = -1' }
-    - { regexp: '^ocredit', line: 'ocredit = -1' }
-    - { regexp: '^lcredit', line: 'lcredit = -1' }
-  when: cis_5_4_1_password_params
+    - {regexp: '^minlen', line: 'minlen = 14'}
+    - {regexp: '^dcredit', line: 'dcredit = -1'}
+    - {regexp: '^ucredit', line: 'ucredit = -1'}
+    - {regexp: '^ocredit', line: 'ocredit = -1'}
+    - {regexp: '^lcredit', line: 'lcredit = -1'}
+  when: cis_rhel_5_4_1_password_params
   tags: [level1, scored, rule_5_4_1]

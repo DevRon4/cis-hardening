@@ -1,13 +1,14 @@
 ---
-- name: restart sshd
-  service:
+- name: Restart sshd
+  ansible.builtin.service:
     name: sshd
     state: restarted
 
-- name: restart postfix
-  service:
+- name: Restart postfix
+  ansible.builtin.service:
     name: postfix
     state: restarted
 
-- name: reload sysctl
-  command: sysctl --system
+- name: Reload sysctl
+  ansible.builtin.command: sysctl --system
+  changed_when: false
