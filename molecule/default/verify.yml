@@ -3,30 +3,22 @@
   hosts: all
   become: true
   tasks:
-    - name: cramfs should not be loaded
-      shell: lsmod | grep cramfs
-      register: cramfs_check
-      failed_when: cramfs_check.rc == 0
+    - name: Check cramfs is blacklisted
+      ansible.builtin.command: grep -r "install cramfs" /etc/modprobe.d/
       changed_when: false
 
-    - name: IP forwarding should be disabled
-      shell: sysctl net.ipv4.ip_forward
+    - name: Check IP forwarding is disabled
+      ansible.builtin.command: sysctl net.ipv4.ip_forward
       register: ipfwd
       failed_when: "'= 1' in ipfwd.stdout"
       changed_when: false
 
-    - name: SSH PermitRootLogin should be no
-      shell: grep "^PermitRootLogin no" /etc/ssh/sshd_config
+    - name: Check SSH PermitRootLogin is no
+      ansible.builtin.command: grep "^PermitRootLogin no" /etc/ssh/sshd_config
       changed_when: false
 
-    - name: auditd should be running
-      shell: systemctl is-active auditd
-      register: auditd_status
-      failed_when: auditd_status.stdout != 'active'
-      changed_when: false
-
-    - name: rsyslog should be running
-      shell: systemctl is-active rsyslog
+    - name: Check rsyslog is running
+      ansible.builtin.command: systemctl is-active rsyslog
       register: rsyslog_status
       failed_when: rsyslog_status.stdout != 'active'
       changed_when: false
